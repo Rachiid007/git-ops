@@ -1,10 +1,10 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: dtt-icm
+  name: dtt-isj
   namespace: argocd
   annotations:
-    argocd-image-updater.argoproj.io/image-list: rachiid007/dtt_frontend:~1
+    argocd-image-updater.argoproj.io/image-list: rachiid007/dtt_front:0.x
     argocd-image-updater.argoproj.io/write-back-method: git:secret:argocd/git-creds
     argocd-image-updater.argoproj.io/git-branch: main
   finalizers:
@@ -21,6 +21,12 @@ spec:
           value: isj.taaltoolbox.be
         - name: namespace.name
           value: isj
+        - name: frontend.deployment.replicas
+          value: "2"
+        - name: frontend.deployment.image.repository
+          value: rachiid007/dtt_front
+        - name: frontend.deployment.image.tag
+          value: 0.0.1
   destination:
     server: "https://kubernetes.default.svc"
     namespace: isj
@@ -34,36 +40,37 @@ spec:
       - CreateNamespace=true
       - PrunePropagationPolicy=Foreground
       - PruneLast=true
----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: dtt-isj
-  namespace: argocd
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
-spec:
-  project: default
-  source:
-    repoURL: "https://github.com/Rachiid007/dtt-chart.git"
-    path: charts
-    targetRevision: HEAD
-    helm:
-      parameters:
-        - name: url
-          value: icm.taaltoolbox.be
-        - name: namespace.name
-          value: icm
-  destination:
-    server: "https://kubernetes.default.svc"
-    namespace: icm
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-      allowEmpty: true
-    syncOptions:
-      - Validate=true
-      - CreateNamespace=true
-      - PrunePropagationPolicy=Foreground
-      - PruneLast=true
+# ---
+# apiVersion: argoproj.io/v1alpha1
+# kind: Application
+# metadata:
+#   name: dtt-icm
+#   namespace: argocd
+#   finalizers:
+#     - resources-finalizer.argocd.argoproj.io
+# spec:
+#   project: default
+#   source:
+#     repoURL: "https://github.com/Rachiid007/dtt-chart.git"
+#     path: charts
+#     targetRevision: HEAD
+#     helm:
+#       parameters:
+#         - name: url
+#           value: icm.taaltoolbox.be
+#         - name: namespace.name
+#           value: icm
+#   destination:
+#     server: "https://kubernetes.default.svc"
+#     namespace: icm
+#   syncPolicy:
+#     automated:
+#       prune: true
+#       selfHeal: true
+#       allowEmpty: true
+#     syncOptions:
+#       - Validate=true
+#       - CreateNamespace=true
+#       - PrunePropagationPolicy=Foreground
+#       - PruneLast=true
+
