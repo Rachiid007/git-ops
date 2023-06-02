@@ -4,9 +4,12 @@ metadata:
   name: dtt-isj
   namespace: argocd
   annotations:
-    argocd-image-updater.argoproj.io/image-list: rachiid007/dtt_front:0.x
+    argocd-image-updater.argoproj.io/image-list: frontend=rachiid007/dtt_front:0.x
     argocd-image-updater.argoproj.io/write-back-method: git:secret:argocd/git-creds
     argocd-image-updater.argoproj.io/git-branch: main
+    argocd-image-updater.argoproj.io/frontend.helm.image-name: frontend.deployment.image.repository
+    argocd-image-updater.argoproj.io/frontend.helm.image-tag: frontend.deployment.image.tag
+
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
